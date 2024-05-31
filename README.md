@@ -75,7 +75,13 @@ This is a React Native application that displays football scores and updates the
 
 2. Use the buttons to add goals to either team.
 
-3. Click the "Update Score" button to send a notification with the updated score.
+### Screen record
+
+
+https://github.com/suhmah/footbolScore/assets/38407958/2020551c-df7e-4f0c-b10c-69b7031edd4c
+
+
+
 
 4. Additional Notes
 The app saves the current state (scores and scorers) and restores it when reopened.
