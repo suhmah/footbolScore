@@ -1,118 +1,83 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, {useState, useEffect} from 'react';
+import {View, Button, Text} from 'react-native';
+import FootballScoreModule from './src/utils/FootballScoreModule';
+import TeamScoreBoard from './src/components/TeamScoreBoard';
+import ScoreButtons from './src/components/ScoreButtons';
+import {TEAMS} from './src/utils/constants';
+import styles from './src/components/styles';
+import getSavedScore from './src/services/getSavedScore';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+type TeamType = 'home' | 'away';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const App: React.FC = () => {
+  const [homeScore, setHomeScore] = useState<number>(0);
+  const [awayScore, setAwayScore] = useState<number>(0);
+  const [homeScorers, setHomeScorers] = useState<string[]>([]);
+  const [awayScorers, setAwayScorers] = useState<string[]>([]);
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+  useEffect(() => {
+    const loadSavedScore = async () => {
+      const savedScore = await getSavedScore();
+      if (savedScore) {
+        setHomeScore(savedScore.homeScore);
+        setAwayScore(savedScore.awayScore);
+        setHomeScorers(
+          savedScore.homeScorers ? savedScore.homeScorers.split('\n') : [],
+        );
+        setAwayScorers(
+          savedScore.awayScorers ? savedScore.awayScorers.split('\n') : [],
+        );
+      }
+    };
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+    loadSavedScore();
+  }, []);
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const addGoal = (team: TeamType) => {
+    const scorer =
+      TEAMS[team].players[
+        Math.floor(Math.random() * TEAMS[team].players.length)
+      ];
+    if (team === 'home') {
+      setHomeScorers([...homeScorers, scorer]);
+      setHomeScore(homeScore + 1);
+    } else {
+      setAwayScorers([...awayScorers, scorer]);
+      setAwayScore(awayScore + 1);
+    }
+  };
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const updateScore = () => {
+    const homeScorersString = homeScorers.join('\n');
+    const awayScorersString = awayScorers.join('\n');
+    const timestamp = '60:22';
+
+    FootballScoreModule.updateScore(
+      TEAMS.home.name,
+      TEAMS.away.name,
+      homeScore,
+      awayScore,
+      TEAMS.home.logo,
+      TEAMS.away.logo,
+      homeScorersString,
+      awayScorersString,
+      timestamp,
+    );
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <TeamScoreBoard team="home" />
+      <View style={styles.spacer} />
+      <TeamScoreBoard team="away" />
+      <Text style={styles.scoreText}>
+        {`${TEAMS.home.name} ${homeScore} - ${awayScore} ${TEAMS.away.name}`}
+      </Text>
+      <ScoreButtons team="home" addGoal={addGoal} />
+      <ScoreButtons team="away" addGoal={addGoal} />
+      <Button title="Update Score" onPress={updateScore} />
+    </View>
   );
-}
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+};
 
 export default App;

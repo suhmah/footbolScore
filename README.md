@@ -1,79 +1,82 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Football Score App
 
-# Getting Started
+This is a React Native application that displays football scores and updates them in real-time through notifications. The app supports both Android and iOS platforms.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## Features
 
-## Step 1: Start the Metro Server
+1. **Display Current Score**: Shows the current score of the football match.
+2. **Add Goals**: Allows users to add goals to either team.
+3. **Update Notification**: Updates the score and other details through a native notification.
+4. **Persistent Score**: Saves the current state of the game and loads it when the app restarts.
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+## Implementation Details
 
-To start Metro, run the following command from the _root_ of your React Native project:
+### React Native Components
 
-```bash
-# using npm
-npm start
+1. **App.tsx**:
+   - This is the main component of the application.
+   - It manages the state for the home and away scores and the scorers.
+   - It uses `useEffect` to load the saved score when the app starts.
+   - It provides buttons to add goals to each team and to update the score.
 
-# OR using Yarn
-yarn start
-```
+2. **TeamScoreBoard**:
+   - Displays the name and logo of the team.
 
-## Step 2: Start your Application
+3. **ScoreButtons**:
+   - Provides buttons to add goals to the teams.
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+### Native Module (Android)
 
-### For Android
+1. **FootballScoreModule.kt**:
+   - This module handles the creation of notifications and saves the state of the game.
+   - It uses `SharedPreferences` to save and retrieve the game state.
+   - It uses `Glide` to load images into the notifications.
+   - It provides methods to update the score and retrieve the saved score.
 
-```bash
-# using npm
-npm run android
+### JavaScript Services
 
-# OR using Yarn
-yarn android
-```
+1. **getSavedScore.ts**:
+   - A service to retrieve the saved score from the native module.
 
-### For iOS
+## Getting Started
 
-```bash
-# using npm
-npm run ios
+### Prerequisites
 
-# OR using Yarn
-yarn ios
-```
+- Node.js
+- npm or yarn
+- Android Studio (for Android development)
+- Xcode (for iOS development)
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+### Installation
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+1. Clone the repository:
+   ```
+   git clone https://github.com/yourusername/football-score-app.git
+   cd football-score-app
 
-## Step 3: Modifying your App
 
-Now that you have successfully run the app, let's modify it.
+2. Install dependencies:
+   ```sh yarn install
+   yarn install
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+### Running the App
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+1. Install dependencies:
+   ```sh yarn install
+   yarn install
+   
+2. Run the app on an Androiddevice/emulator:
+   ```sh yarn android
+   yarn android
 
-## Congratulations! :tada:
+### Updating the Score
 
-You've successfully run and modified your React Native App. :partying_face:
+1. Open the app.
 
-### Now what?
+2. Use the buttons to add goals to either team.
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+3. Click the "Update Score" button to send a notification with the updated score.
 
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+4. Additional Notes
+The app saves the current state (scores and scorers) and restores it when reopened.
+The notifications are customized using native Android code.
