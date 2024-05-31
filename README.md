@@ -51,7 +51,7 @@ This is a React Native application that displays football scores and updates the
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/football-score-app.git
+   git clone https://github.com/suhmah/footbolScore.git
    cd football-score-app
 
 
